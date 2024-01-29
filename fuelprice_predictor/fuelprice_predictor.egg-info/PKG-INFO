@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: fuelprice-predictor
+Version: 0.0.1
+Requires-Python: >=3.8
+Requires-Dist: pandas==2.2.0
+Requires-Dist: prophet==1.1.5
+Requires-Dist: optuna==3.5.0
+Requires-Dist: mlflow==2.9.2
+Requires-Dist: scikit-learn==1.4.0
+Requires-Dist: requests==2.31.0
