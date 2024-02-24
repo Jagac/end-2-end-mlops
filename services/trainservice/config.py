@@ -1,6 +1,5 @@
 import os
 from dataclasses import dataclass
-
 import mlflow
 
 
@@ -10,8 +9,8 @@ class Config:
     aws_region: str = "eu-west-3"
     aws_access_key_id: str = "admin"
     aws_secret_access_key: str = "adminadmin"
-    mlflow_s3_endpoint_url: str = "http://localhost:9020"
-    mlflow_tracking_uri: str = "http://localhost:5000"
+    mlflow_s3_endpoint_url: str = "http://minio:9000"
+    mlflow_tracking_uri: str = "http://mlflow-server:5000"
 
     def setup_environment(self):
         os.environ["AWS_DEFAULT_REGION"] = self.aws_default_region

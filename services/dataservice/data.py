@@ -5,13 +5,20 @@ import requests
 
 
 class DataHandler:
+    """Handles data from the api"""
+
     def __init__(self, target_column: str) -> None:
+        """
+        Args:
+            target_column (str): euro95_1 / diesel_2 / lpg_3
+        """
         self.url = "https://opendata.cbs.nl/ODataApi/odata/80416ENG/TypedDataSet"
         self.target_column = target_column
         self.cap = None
         self.floor = None
 
     def get_full(self) -> pd.DataFrame:
+
         data = requests.get(self.url)
 
         data = data.json()["value"]
@@ -45,8 +52,8 @@ class DataHandler:
 
         self.cap = df["y"].max()
         self.floor = df["y"].min()
-        
+
         df["cap"] = self.cap
         df["floor"] = self.floor
-       
+
         return df

@@ -2,10 +2,7 @@ from celery.result import AsyncResult
 from flask import Flask, jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-
-from celery_diesel import predict_diesel
-from celery_eu95 import predict_eu95
-from celery_lpg import predict_lpg
+from celery import Celery
 
 app = Flask(__name__)
 
@@ -14,6 +11,9 @@ limiter = Limiter(
     app=app,
     storage_uri="redis://localhost:6379/1",
 )
+
+app = Celery('tasks', broker='redis://localhost:6379/0', backend='redis://localhost:6379/1')
+app.autodiscover_tasks(['tasks'])
 
 
 @limiter.limit("10 per minute")
@@ -52,8 +52,6 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 
 @limiter.limit("10 per minute")

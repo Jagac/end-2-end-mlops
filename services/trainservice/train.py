@@ -11,7 +11,7 @@ from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 
-from .config import Config
+from config import Config
 
 
 class TrainingHandler:
