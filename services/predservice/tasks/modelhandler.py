@@ -7,7 +7,7 @@ from mlflow import MlflowClient
 from .config import Config
 
 
-class RegistryHandler:
+class ModelRegistryHandler:
     def __init__(
         self, model_name: str, client: Optional[MlflowClient] = MlflowClient()
     ) -> None:

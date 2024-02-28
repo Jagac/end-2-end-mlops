@@ -1,0 +1,6 @@
+pandas==2.2.0
+prophet==1.1.5
+celery==5.3.6
+mlflow==2.9.2
+redis
+boto3

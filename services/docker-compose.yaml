@@ -39,7 +39,6 @@
         - trainservice
         - redis 
       
-    
     mlflow-db:
       image: postgres:alpine
       environment:

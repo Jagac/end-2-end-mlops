@@ -1,5 +1,5 @@
 from celery import Celery
-from train import TrainingHandler
+from train import TrainingStrategyBuilder
 from datetime import datetime
 import pytz
 import pandas as pd
@@ -12,13 +12,14 @@ trainer_celery = Celery(
     "celery_trainer", broker="redis://redis:6379/0", backend="redis://redis:6379/0"
 )
 
+# TODO: Add manual training task using TrainingStrategyBuilder
 @trainer_celery.task
 def trigger_training_pipeline(data, target) -> None:
     df = pd.DataFrame(data)
     
-    training_handler = TrainingHandler(df)
-    training_handler.auto_train(
-        registry_name=f"{target}-{ny_date}",
-        num_trials=25,
-        best_model_experiment_name="best_experiments",
+    auto_trainer = (
+        TrainingStrategyBuilder(df)
+        .set_auto_training_params("{target}-{ny_date}", 25, "best_experiments")
+        .build_auto_trainer()
     )
+    auto_trainer.train()
