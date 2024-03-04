@@ -1,20 +1,16 @@
 import datetime
+from abc import ABC, abstractmethod
 from typing import Callable
 
 import mlflow
 import optuna
 import pandas as pd
+from config import Config
 from optuna.integration.mlflow import MLflowCallback
 from prophet import Prophet
-from sklearn.metrics import (
-    mean_absolute_error,
-    mean_absolute_percentage_error,
-    mean_squared_error,
-    r2_score,
-)
-
-from config import Config
-from abc import ABC, abstractmethod
+from sklearn.metrics import (mean_absolute_error,
+                             mean_absolute_percentage_error,
+                             mean_squared_error, r2_score)
 
 
 class TrainingStrategy(ABC):

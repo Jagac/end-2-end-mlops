@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r /code/celeryrequirements.txt
 
 COPY . /code
 
-CMD ["celery", "-A", "celerytrainer", "worker", "--loglevel=info", "--uid=nobody", "--gid=nogroup"]
+CMD [ "python", "euro.py"]

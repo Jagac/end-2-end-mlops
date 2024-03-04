@@ -6,4 +6,4 @@ COPY ./requirements.txt /code/requirements.txt
 RUN pip install --no-cache-dir -r /code/requirements.txt
 COPY . /code
 
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:8000", "wsgi:app"]
+CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:8000", "main:app"]

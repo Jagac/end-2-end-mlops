@@ -1,7 +1,7 @@
-from flask import Flask, jsonify
-from datahandler import DataHandler
-from register import ServiceRegistrationHandler
 import logging
+from flask import Flask, jsonify, request
+from register import ServiceRegistrationHandler
+from apisource import DataHandler
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -9,30 +9,44 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+app = Flask(__name__)
+reg = ServiceRegistrationHandler("dataservice", 3000)
+reg.register_service()
+logger.info("Service registered")
 
-class DataService:
-    def __init__(self):
-        self.app = Flask(__name__)
-        self.reg = ServiceRegistrationHandler("dataservice", 3000)
-        self.reg.register_service()
-        logger.info("Service registered")
-        self.register_routes()
-        logger.info("Routes registered")
 
-    def register_routes(self):
-        @self.app.route("/api/v1/<target>/full", methods=["GET"])
-        def get_full_data(target):
-            logger.info(f"Received full data request for: {target}")
-            data_handler = DataHandler(target)
-            full_data = data_handler.get_full()
-            return jsonify(full_data.to_dict(orient="records"))
+@app.route("/api/v1/<target>/full", methods=["GET"])
+def getFullData(target):
+    try:
+        logger.info(f"Received full data request for: {target}")
+        data_handler = DataHandler(target)
+        full_data, latest_date = data_handler.get_full()
+        
+        response_data = {
+            "latestDate": latest_date,
+            "data": full_data.to_dict(orient="records"),
+        }
+        
+        ip = request.environ.get("REMOTE_ADDR")
+        logger.info(f"Data successfully processed and sent to {ip}")
+        return jsonify(response_data), 200
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-        @self.app.route("/api/v1/<target>/latest", methods=["GET"])
-        def get_latest_data(target):
-            logger.info(f"Received latest data request for: {target}")
-            data_handler = DataHandler(target)
-            full_data = data_handler.get_latest()
-            return jsonify(full_data.to_dict(orient="records"))
 
-    def run(self):
-        self.app.run(debug=True)
+@app.route("/api/v1/<target>/latest", methods=["GET"])
+def getLatestData(target):
+    try:
+        logger.info(f"Received latest data request for: {target}")
+        data_handler = DataHandler(target)
+        full_data = data_handler.get_latest()
+        
+        response_data = {
+            "data": full_data.to_dict(orient="records"),
+        }
+        
+        return jsonify(response_data), 200
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        return jsonify({"error": str(e)}), 500

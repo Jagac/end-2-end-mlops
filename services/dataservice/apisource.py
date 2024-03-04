@@ -24,9 +24,8 @@ class DataHandler:
         data = data.json()["value"]
         df = pd.DataFrame().from_dict(data)
         df = self._prepare_dataframe(df)
-        print(df)
-
-        return df
+        latest_date = df.ds.max()
+        return df, latest_date
 
     def get_latest(self) -> pd.DataFrame:
         data = requests.get(self.url)
